@@ -7,10 +7,10 @@ st.write("Calculate your Semester and Overall GPA with ease.")
 
 st.info("""
 ### Instructions:
-1. Select the grade for each course from the dropdown menus provided.  
-2. If Course 6 is not applicable, select "Null" from the dropdown menu.  
-3. Enter your previous GPA (if available) to calculate the overall GPA.  
-4. If you only wish to compute the Semester GPA, leave the "Old GPA" field empty.  
+1. If Course 6 is not applicable, select "Null" from the dropdown menu.
+2. Enter your previous GPA (if available) to calculate the overall GPA.  
+3. Enter your previous Credit Hours (num of Previous Courses * 3) to calculate the overall GPA.  
+4. If you only wish to compute the Semester GPA, leave the "Old GPA" and "Previous Credit Hours" fields empty.  
 """)
 
 
