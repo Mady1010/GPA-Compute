@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Setting up the Streamlit page
+
 st.set_page_config(page_title="GPA Computing", page_icon="📘", layout="centered")
 st.title("GPA COMPUTING")
 st.write("Calculate your Semester and Overall GPA with ease.")
@@ -13,7 +13,7 @@ st.info("""
 4. If you only wish to compute the Semester GPA, leave the "Old GPA" field empty.  
 """)
 
-# Define grades and their corresponding values
+
 grades = {
     'A+': 4.0, 'A': 3.75, 'B+': 3.4, 'B': 3.0,
     'C+': 2.7, 'C': 2.3, 'C-': 2.0, 'D+': 1.7,
@@ -21,13 +21,27 @@ grades = {
 }
 
 
-# GPA Calculation function
-def calculate_gpa(course_grades, old_gpa, include_course_6=True):
-    total_credits = 15 if not include_course_6 else 18
+
+def calculate_gpa(course_grades, old_gpa, old_credit_hours, include_course_6=True):
+    
+    current_credits = 15 if not include_course_6 else 18
+
+   
     course_points = sum(grades[grade] * 3 for grade in course_grades if grade != "Null")
-    semester_gpa = round(course_points / total_credits, 3)
-    overall_gpa = round((old_gpa + semester_gpa) / 2, 3) if old_gpa else semester_gpa
+
+   
+    semester_gpa = round(course_points / current_credits, 3)
+
+  
+    if old_gpa and old_credit_hours:
+        total_credits = old_credit_hours + current_credits
+        weighted_gpa = ((old_gpa * old_credit_hours) + (semester_gpa * current_credits)) / total_credits
+        overall_gpa = round(weighted_gpa, 3)
+    else:
+        overall_gpa = semester_gpa  
+
     return semester_gpa, overall_gpa
+
 
 # User inputs
 st.header("Enter Your Grades")
@@ -44,13 +58,14 @@ with col2:
     course6 = st.selectbox("Course 6", options=list(grades.keys()), key="course6")
 
 old_gpa = st.number_input("Enter OLD GPA", min_value=0.0, max_value=4.0, step=0.10)
+old_credit_hours = st.number_input("Enter Previous Credit Hours", min_value=0, step=1)
 
-# Calculate GPA
 if st.button("Calculate GPA"):
     include_course_6 = course6 != "Null"
     semester_gpa, overall_gpa = calculate_gpa(
         [course1, course2, course3, course4, course5, course6],
         old_gpa,
+        old_credit_hours,
         include_course_6=include_course_6
     )
     st.success(f"Semester GPA: {semester_gpa}")
